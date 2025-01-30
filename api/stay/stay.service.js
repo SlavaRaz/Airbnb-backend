@@ -17,20 +17,20 @@ export const stayService = {
 	removeStayMsg,
 }
 
-async function query(filterBy = { txt: '' }) {
+async function query(filterBy) {
 	try {
-        const criteria = _buildCriteria(filterBy)
-        const sort = _buildSort(filterBy)
-
+		const criteria = _buildCriteria(filterBy)
+		// const sort = _buildSort(filterBy)
+		console.log(criteria)
 		const collection = await dbService.getCollection('stay')
-		var stayCursor = await collection.find(criteria, { sort })
+		var stayCursor = await collection.find(criteria).toArray()
+		console.log(collection)
+		// if (filterBy.pageIdx !== undefined) {
+		// 	stayCursor.skip(filterBy.pageIdx * PAGE_SIZE).limit(PAGE_SIZE)
+		// }
 
-		if (filterBy.pageIdx !== undefined) {
-			stayCursor.skip(filterBy.pageIdx * PAGE_SIZE).limit(PAGE_SIZE)
-		}
-
-		const stays = stayCursor.toArray()
-		return stays
+		// const stays = collection
+		return stayCursor
 	} catch (err) {
 		logger.error('cannot find stays', err)
 		throw err
@@ -39,11 +39,11 @@ async function query(filterBy = { txt: '' }) {
 
 async function getById(stayId) {
 	try {
-        const criteria = { _id: ObjectId.createFromHexString(stayId) }
+		const criteria = { _id: ObjectId.createFromHexString(stayId) }
 
 		const collection = await dbService.getCollection('stay')
 		const stay = await collection.findOne(criteria)
-        
+
 		stay.createdAt = stay._id.getTimestamp()
 		return stay
 	} catch (err) {
@@ -53,19 +53,19 @@ async function getById(stayId) {
 }
 
 async function remove(stayId) {
-    const { loggedinUser } = asyncLocalStorage.getStore()
-    const { _id: ownerId, isAdmin } = loggedinUser
+	const { loggedinUser } = asyncLocalStorage.getStore()
+	const { _id: ownerId, isAdmin } = loggedinUser
 
 	try {
-        const criteria = { 
-            _id: ObjectId.createFromHexString(stayId), 
-        }
-        if(!isAdmin) criteria['owner._id'] = ownerId
-        
+		const criteria = {
+			_id: ObjectId.createFromHexString(stayId),
+		}
+		if (!isAdmin) criteria['owner._id'] = ownerId
+
 		const collection = await dbService.getCollection('stay')
 		const res = await collection.deleteOne(criteria)
 
-        if(res.deletedCount === 0) throw('Not your stay')
+		if (res.deletedCount === 0) throw ('Not your stay')
 		return stayId
 	} catch (err) {
 		logger.error(`cannot remove stay ${stayId}`, err)
@@ -86,10 +86,10 @@ async function add(stay) {
 }
 
 async function update(stay) {
-    const stayToSave = { vendor: stay.vendor, speed: stay.speed }
+	const stayToSave = { vendor: stay.vendor, speed: stay.speed }
 
-    try {
-        const criteria = { _id: ObjectId.createFromHexString(stay._id) }
+	try {
+		const criteria = { _id: ObjectId.createFromHexString(stay._id) }
 
 		const collection = await dbService.getCollection('stay')
 		await collection.updateOne(criteria, { $set: stayToSave })
@@ -103,9 +103,9 @@ async function update(stay) {
 
 async function addStayMsg(stayId, msg) {
 	try {
-        const criteria = { _id: ObjectId.createFromHexString(stayId) }
-        msg.id = makeId()
-        
+		const criteria = { _id: ObjectId.createFromHexString(stayId) }
+		msg.id = makeId()
+
 		const collection = await dbService.getCollection('stay')
 		await collection.updateOne(criteria, { $push: { msgs: msg } })
 
@@ -118,11 +118,11 @@ async function addStayMsg(stayId, msg) {
 
 async function removeStayMsg(stayId, msgId) {
 	try {
-        const criteria = { _id: ObjectId.createFromHexString(stayId) }
+		const criteria = { _id: ObjectId.createFromHexString(stayId) }
 
 		const collection = await dbService.getCollection('stay')
-		await collection.updateOne(criteria, { $pull: { msgs: { id: msgId }}})
-        
+		await collection.updateOne(criteria, { $pull: { msgs: { id: msgId } } })
+
 		return msgId
 	} catch (err) {
 		logger.error(`cannot add stay msg ${stayId}`, err)
@@ -131,15 +131,13 @@ async function removeStayMsg(stayId, msgId) {
 }
 
 function _buildCriteria(filterBy) {
-    const criteria = {
-        vendor: { $regex: filterBy.txt, $options: 'i' },
-        speed: { $gte: filterBy.minSpeed },
-    }
+	const criteria = filterBy
+	console.log(criteria)
 
-    return criteria
+	return criteria
 }
 
 function _buildSort(filterBy) {
-    if(!filterBy.sortField) return {}
-    return { [filterBy.sortField]: filterBy.sortDir }
+	if (!filterBy.sortField) return {}
+	return { [filterBy.sortField]: filterBy.sortDir }
 }
