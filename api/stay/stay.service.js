@@ -17,19 +17,11 @@ export const stayService = {
 	removeStayMsg,
 }
 
-async function query(filterBy) {
+async function query(filterBy = { txt: '' }) {
 	try {
 		const criteria = _buildCriteria(filterBy)
-		// const sort = _buildSort(filterBy)
-		console.log(criteria)
 		const collection = await dbService.getCollection('stay')
 		var stayCursor = await collection.find(criteria).toArray()
-		console.log(collection)
-		// if (filterBy.pageIdx !== undefined) {
-		// 	stayCursor.skip(filterBy.pageIdx * PAGE_SIZE).limit(PAGE_SIZE)
-		// }
-
-		// const stays = collection
 		return stayCursor
 	} catch (err) {
 		logger.error('cannot find stays', err)
@@ -131,8 +123,20 @@ async function removeStayMsg(stayId, msgId) {
 }
 
 function _buildCriteria(filterBy) {
-	const criteria = filterBy
-	console.log(criteria)
+	const criteria = {}
+
+	if (filterBy.location) {
+		criteria["loc.country"] = { $regex: filterBy.location, $options: 'i' }
+	}
+	if (filterBy.categories) {
+		criteria.type = { $in: [filterBy.categories] }
+	}
+	if (filterBy.guests) {
+		console.log(filterBy.guests)
+		criteria.capacity = { $gte: filterBy.guests }
+	}
+
+
 
 	return criteria
 }

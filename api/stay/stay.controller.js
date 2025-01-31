@@ -2,8 +2,17 @@ import { logger } from '../../services/logger.service.js'
 import { stayService } from './stay.service.js'
 
 export async function getStays(req, res) {
-	const filterBy = req.query
 	try {
+		const filterBy = {
+			location: req.query.location || '',
+			categories: req.query.categories || '',
+			guests:
+				(parseInt(req.query.adults) || 0) +
+				(parseInt(req.query.children) || 0) +
+				(parseInt(req.query.pets) || 0) +
+				(parseInt(req.query.infants) || 0),
+		}
+
 		const stays = await stayService.query(filterBy)
 		res.json(stays)
 	} catch (err) {
@@ -38,12 +47,12 @@ export async function addStay(req, res) {
 
 export async function updateStay(req, res) {
 	const { loggedinUser, body: stay } = req
-    const { _id: userId, isAdmin } = loggedinUser
+	const { _id: userId, isAdmin } = loggedinUser
 
-    if(!isAdmin && stay.owner._id !== userId) {
-        res.status(403).send('Not your stay...')
-        return
-    }
+	if (!isAdmin && stay.owner._id !== userId) {
+		res.status(403).send('Not your stay...')
+		return
+	}
 
 	try {
 		const updatedStay = await stayService.update(stay)
