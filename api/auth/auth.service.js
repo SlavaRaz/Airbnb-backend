@@ -25,6 +25,7 @@ async function login(username, password) {
 
 	delete user.password
 	user._id = user._id.toString()
+	user.imgUrl= user.imgUrl
 	return user
 }
 
@@ -38,13 +39,14 @@ async function signup({ username, password, fullname, imgUrl, isAdmin }) {
 	if (userExist) return Promise.reject('Username already taken')
 
 	const hash = await bcrypt.hash(password, saltRounds)
-	return userService.add({ username, password: hash, fullname, imgUrl, isAdmin })
+	return userService.add({ username, password: hash, fullname, imgUrl })
 }
 
 function getLoginToken(user) {
 	const userInfo = { 
         _id: user._id, 
         fullname: user.fullname, 
+		imgUrl:user.imgUrl,
         score: user.score,
         isAdmin: user.isAdmin,
     }

@@ -1,0 +1,128 @@
+[
+	{
+		"fullname": "slava",
+		"imgUrl": "/img/img1.jpg",
+		"username": "slava",
+		"password": "secret",
+		"reviews": [
+			{
+				"id": "c6tBX",
+				"txt": "Quiet guest...",
+				"rate": "4",
+				"by": {
+					"_id": "67a14bf487133c9bfc89d1bc",
+					"fullname": "shani",
+					"imgUrl": "/img/img2.jpg"
+				}
+			}
+		]
+	},
+	{
+		"fullname": "shani",
+		"imgUrl": "/img/img2.jpg",
+		"username": "shani",
+		"password": "secret",
+		"reviews": [
+			{
+				"id": "KTLgI",
+				"txt": "Great guest, very friendly!",
+				"rate": "5",
+				"by": {
+					"_id": "67a14bf487133c9bfc89d1bb",
+					"fullname": "slava",
+					"imgUrl": "/img/img1.jpg"
+				}
+			}
+		]
+	},
+	{
+		"fullname": "odeya",
+		"imgUrl": "/img/img3.jpg",
+		"username": "odeya",
+		"password": "secret",
+		"reviews": [
+			{
+				"id": "NFPvQ",
+				"txt": "Quiet guest...",
+				"rate": "5",
+				"by": {
+					"_id": "67a14bf487133c9bfc89d1bf",
+					"fullname": "dori",
+					"imgUrl": "/img/img5.jpg"
+				}
+			}
+		]
+	},
+	{
+		"fullname": "reut",
+		"imgUrl": "/img/img4.jpg",
+		"username": "reut",
+		"password": "secret",
+		"reviews": [
+			{
+				"id": "rT880",
+				"txt": "Enjoyed their stay, would host again",
+				"rate": "4",
+				"by": {
+					"_id": "67a14bf487133c9bfc89d1bd",
+					"fullname": "odeya",
+					"imgUrl": "/img/img3.jpg"
+				}
+			}
+		]
+	},
+	{
+		"fullname": "dori",
+		"imgUrl": "/img/img5.jpg",
+		"username": "dori",
+		"password": "secret",
+		"reviews": [
+			{
+				"id": "MXPdX",
+				"txt": "Very frendly...",
+				"rate": "4",
+				"by": {
+					"_id": "67a14bf487133c9bfc89d1be",
+					"fullname": "reut",
+					"imgUrl": "/img/img4.jpg"
+				}
+			}
+		]
+	},
+	{
+		"fullname": "User 6",
+		"imgUrl": "/img/img6.jpg",
+		"username": "user6",
+		"password": "secret",
+		"reviews": [
+			{
+				"id": "G0b5k",
+				"txt": "Like them...",
+				"rate": "4",
+				"by": {
+					"_id": "u102",
+					"fullname": "User 2",
+					"imgUrl": "/img/img2.jpg"
+				}
+			}
+		]
+	},
+	{
+		"fullname": "User 7",
+		"imgUrl": "/img/img7.jpg",
+		"username": "user7",
+		"password": "secret",
+		"reviews": [
+			{
+				"id":"O9ZOl",
+				"txt": "Enjoyed their stay, would host again",
+				"rate": "4",
+				"by": {
+					"_id": "u102",
+					"fullname": "User 2",
+					"imgUrl": "/img/img2.jpg"
+				}
+			}
+		]
+	}
+]

@@ -21,6 +21,7 @@
         "express": "^4.17.1",
         "jq": "^1.7.2",
         "mongodb": "^6.6.2",
+        "require-from-string": "^2.0.2",
         "socket.io": "^4.2.0"
     },
     "devDependencies": {
