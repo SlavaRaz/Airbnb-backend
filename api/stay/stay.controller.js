@@ -6,6 +6,8 @@ export async function getStays(req, res) {
 		const filterBy = {
 			location: req.query.location || '',
 			categories: req.query.categories || '',
+			checkin: req.query.checkin || '',
+			checkout: req.query.checkout || '',
 			guests:
 				(parseInt(req.query.adults) || 0) +
 				(parseInt(req.query.children) || 0) +
@@ -36,7 +38,7 @@ export async function addStay(req, res) {
 	const { loggedinUser, body: stay } = req
 
 	try {
-		stay.owner = loggedinUser
+		stay.host = loggedinUser
 		const addedStay = await stayService.add(stay)
 		res.json(addedStay)
 	} catch (err) {
@@ -49,7 +51,7 @@ export async function updateStay(req, res) {
 	const { loggedinUser, body: stay } = req
 	const { _id: userId, isAdmin } = loggedinUser
 
-	if (!isAdmin && stay.owner._id !== userId) {
+	if (!isAdmin && stay.host._id !== userId) {
 		res.status(403).send('Not your stay...')
 		return
 	}
@@ -80,12 +82,13 @@ export async function addStayMsg(req, res) {
 
 	try {
 		const stayId = req.params.id
-		const msg = {
-			txt: req.body.txt,
-			by: loggedinUser,
+		const review = {
+			txt: req.body.review.txt,
+			rate: req.body.review.rate,
+			by: loggedinUser
 		}
-		const savedMsg = await stayService.addStayMsg(stayId, msg)
-		res.json(savedMsg)
+		const saveReview = await stayService.addStayMsg(stayId, review)
+		res.json(saveReview)
 	} catch (err) {
 		logger.error('Failed to update stay', err)
 		res.status(400).send({ err: 'Failed to update stay' })
@@ -95,9 +98,9 @@ export async function addStayMsg(req, res) {
 export async function removeStayMsg(req, res) {
 	try {
 		const stayId = req.params.id
-		const { msgId } = req.params
+		const { reviewId } = req.params
 
-		const removedId = await stayService.removeStayMsg(stayId, msgId)
+		const removedId = await stayService.removeStayMsg(stayId, reviewId)
 		res.send(removedId)
 	} catch (err) {
 		logger.error('Failed to remove stay msg', err)
