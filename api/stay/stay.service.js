@@ -13,8 +13,8 @@ export const stayService = {
 	getById,
 	add,
 	update,
-	addStayMsg,
-	removeStayMsg,
+	addStayReview,
+	removeStayReview,
 }
 
 async function query(filterBy = { txt: '' }) {
@@ -93,31 +93,31 @@ async function update(stay) {
 	}
 }
 
-async function addStayMsg(stayId, msg) {
+async function addStayReview(stayId, review) {
 	try {
 		const criteria = { _id: ObjectId.createFromHexString(stayId) }
-		msg.id = makeId()
+		review.id = makeId()
 
 		const collection = await dbService.getCollection('stay')
-		await collection.updateOne(criteria, { $push: { msgs: msg } })
+		await collection.updateOne(criteria, { $push: { reviews: review } })
 
-		return msg
+		return review
 	} catch (err) {
-		logger.error(`cannot add stay msg ${stayId}`, err)
+		logger.error(`cannot add stay review ${stayId}`, err)
 		throw err
 	}
 }
 
-async function removeStayMsg(stayId, msgId) {
+async function removeStayReview(stayId, reviewId) {
 	try {
 		const criteria = { _id: ObjectId.createFromHexString(stayId) }
 
 		const collection = await dbService.getCollection('stay')
-		await collection.updateOne(criteria, { $pull: { msgs: { id: msgId } } })
+		await collection.updateOne(criteria, { $pull: { reviews: { id: reviewId } } })
 
-		return msgId
+		return reviewId
 	} catch (err) {
-		logger.error(`cannot add stay msg ${stayId}`, err)
+		logger.error(`cannot add stay review ${stayId}`, err)
 		throw err
 	}
 }
@@ -141,7 +141,7 @@ function _buildCriteria(filterBy) {
 	return criteria
 }
 
-function _buildSort(filterBy) {
-	if (!filterBy.sortField) return {}
-	return { [filterBy.sortField]: filterBy.sortDir }
-}
+// function _buildSort(filterBy) {
+// 	if (!filterBy.sortField) return {}
+// 	return { [filterBy.sortField]: filterBy.sortDir }
+// }

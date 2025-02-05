@@ -3,7 +3,7 @@ import express from 'express'
 import { requireAuth } from '../../middlewares/requireAuth.middleware.js'
 import { log } from '../../middlewares/logger.middleware.js'
 
-import { getStays, getStayById, addStay, updateStay, removeStay, addStayMsg, removeStayMsg } from './stay.controller.js'
+import { getStays, getStayById, addStay, updateStay, removeStay, addStayReview, removeStayReview } from './stay.controller.js'
 
 const router = express.Router()
 
@@ -17,7 +17,7 @@ router.put('/:id', requireAuth, updateStay)
 router.delete('/:id', requireAuth, removeStay)
 // router.delete('/:id', requireAuth, requireAdmin, removeStay)
 
-router.post('/:id/msg', requireAuth, addStayMsg)
-router.delete('/:id/msg/:msgId', requireAuth, removeStayMsg)
+router.post('/:id/review', requireAuth, addStayReview)
+router.delete('/:id/review/:reviewId', requireAuth, removeStayReview)
 
 export const stayRoutes = router
