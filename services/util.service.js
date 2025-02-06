@@ -69,3 +69,8 @@ export function randomPastTime() {
 	const pastTime = getRandomIntInclusive(HOUR, WEEK)
 	return Date.now() - pastTime
 }
+
+export function convertToDate(timeStamp) {
+	const date = new Date(timeStamp)
+	return String(String((date.getMonth() + 1)).padStart(2, '0') + "/" + date.getDate()).padStart(2, '0') + "/" + date.getFullYear()
+}

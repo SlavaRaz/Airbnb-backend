@@ -2,19 +2,21 @@ import { logger } from '../../services/logger.service.js'
 import { stayService } from './stay.service.js'
 
 export async function getStays(req, res) {
+	console.log(req.query.checkOut)
 	try {
 		const filterBy = {
 			location: req.query.location || '',
 			categories: req.query.categories || '',
-			checkin: req.query.checkin || '',
-			checkout: req.query.checkout || '',
+			bookedDates: {
+				checkIn: req.query.checkIn || '' ,
+				checkOut: req.query.checkOut || ''
+			},
 			guests:
 				(parseInt(req.query.adults) || 0) +
 				(parseInt(req.query.children) || 0) +
 				(parseInt(req.query.pets) || 0) +
 				(parseInt(req.query.infants) || 0),
 		}
-
 		const stays = await stayService.query(filterBy)
 		res.json(stays)
 	} catch (err) {

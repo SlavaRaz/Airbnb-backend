@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb'
 
 import { logger } from '../../services/logger.service.js'
-import { makeId } from '../../services/util.service.js'
+import { makeId, convertToDate } from '../../services/util.service.js'
 import { dbService } from '../../services/db.service.js'
 import { asyncLocalStorage } from '../../services/als.service.js'
 
@@ -124,6 +124,7 @@ async function removeStayReview(stayId, reviewId) {
 
 function _buildCriteria(filterBy) {
 	const criteria = {}
+	console.log("filterby", filterBy)
 
 	if (filterBy.location) {
 		criteria["loc.country"] = { $regex: filterBy.location, $options: 'i' }
@@ -132,12 +133,21 @@ function _buildCriteria(filterBy) {
 		criteria.type = { $in: [filterBy.categories] }
 	}
 	if (filterBy.guests) {
-		console.log(filterBy.guests)
 		criteria.capacity = { $gte: filterBy.guests }
 	}
-
-
-
+	if (filterBy.bookedDates.checkIn && filterBy.bookedDates.checkOut) {
+		const checkIn = convertToDate(filterBy.bookedDates.checkIn)
+		const checkOut = convertToDate(filterBy.bookedDates.checkOut)
+		console.log(checkIn)
+		criteria["bookedDates"] = {
+			$not: {
+				$elemMatch: {
+					checkIn: { $lt: checkOut },
+					checkOut: { $gt: checkIn }
+				}
+			}
+		}
+	}
 	return criteria
 }
 
