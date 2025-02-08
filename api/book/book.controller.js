@@ -4,8 +4,8 @@ import { bookService } from './book.service.js'
 export async function getBooks(req, res) {
     try {
         const filterBy = {
-            // hostId: req.query?.hostId || '',
-            // userId: req.query?.userId || '',
+            hostId: req.query?.hostId || '',
+            userId: req.query?.userId || '',
         }
 
         const books = await bookService.query(filterBy)
